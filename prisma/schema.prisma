@@ -1,0 +1,42 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// TODO: https://www.prisma.io/docs/orm/prisma-schema/overview/location#multi-file-prisma-schema
+model User {
+  id Int @id @default(autoincrement())
+  name String
+  email String @unique
+  seat Seat[]
+}
+
+
+model Seat {
+  id        Int   @id @default(autoincrement())
+  userId    Int?
+  claimedBy User? @relation(fields: [userId], references: [id])
+  movieId   Int
+  movie     Movie @relation(fields: [movieId], references: [id])
+  version   Int 
+}
+
+model Movie {
+  id    Int    @id     @default(autoincrement())
+  name  String @unique
+  seats Seat[]
+}
+
+model Tag {
+  id   Int    @id @default(autoincrement())
+  name String @unique
+}
+
+
